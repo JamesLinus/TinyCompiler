@@ -1,6 +1,7 @@
 package compiler.tiny.inter;
 
 import compiler.tiny.lexer.Word;
+import compiler.tiny.parser.Env;
 
 import java.io.PrintStream;
 
@@ -19,5 +20,20 @@ public class Id extends Expr {
     public void dumpTree(int depth, PrintStream out) {
         printSpace(depth, out);
         out.printf("id:%s\n", mVariable.getLexeme());
+    }
+
+    @Override
+    protected Expr reduce(Env env, PrintStream out) {
+        return this;
+    }
+
+    @Override
+    protected Expr gen(Env env, PrintStream out) {
+        return this;
+    }
+
+    @Override
+    public String toString() {
+        return mVariable.getLexeme();
     }
 }

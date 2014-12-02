@@ -47,6 +47,7 @@ public class Main {
         try {
             Program program = parser.parse();
             program.dumpTree(0, System.out);
+            program.gen(System.out);
         } catch (LexerException e) {
             e.printStackTrace();
         } catch (ParseException e) {

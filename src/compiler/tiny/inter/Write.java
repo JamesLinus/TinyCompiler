@@ -1,5 +1,7 @@
 package compiler.tiny.inter;
 
+import compiler.tiny.parser.Env;
+
 import java.io.PrintStream;
 
 /**
@@ -18,5 +20,13 @@ public class Write extends Stmt {
         printSpace(depth, out);
         out.println("write");
         mExpr.dumpTree(depth + 2, out);
+    }
+
+    @Override
+    public void gen(Env env, PrintStream out) {
+        Expr g = mExpr.gen(env, out).reduce(env, out);
+        out.print("printf(\"%d \", ");
+        out.print(g.toString());
+        out.println(");");
     }
 }

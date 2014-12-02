@@ -21,6 +21,9 @@ public class Parser {
         Seq seq;
         if (mLexer.nextToken(mLookhead)) {
             seq = seq();
+            if (!isEOF()) {
+                throw ParseException.generateException(mLookhead, "意外的符号 \"" + mLookhead.getToken().toString() + "\"");
+            }
         } else {
             seq = new Seq(Nop.NOP, Nop.NOP);
         }
@@ -149,7 +152,7 @@ public class Parser {
         Stmt stmt;
         switch (mLookhead.getToken().getTag()) {
             case Token.TAG_VARIABLE:
-                Id id = mEnv.put((Word) mLookhead.getToken(), new Id((Word) mLookhead.getToken()));
+                Id id = mEnv.putVariable((Word) mLookhead.getToken(), new Id((Word) mLookhead.getToken()));
                 stmt = new Read(id);
                 if (!match(Token.TAG_VARIABLE)) {
                     // this should never happen
@@ -195,7 +198,7 @@ public class Parser {
 
         Expr expr = expr();
 
-        Id left = mEnv.put(currentWord, new Id(currentWord)); // id 符号表的加入要在右侧表达式计算完成后才能加入
+        Id left = mEnv.putVariable(currentWord, new Id(currentWord)); // id 符号表的加入要在右侧表达式计算完成后才能加入
 
         return new Assign(left, expr);
     }
@@ -340,7 +343,7 @@ public class Parser {
                 }
                 break;
             case Token.TAG_VARIABLE:
-                exp = mEnv.get((Word) mLookhead.getToken());
+                exp = mEnv.getVariable((Word) mLookhead.getToken());
                 if (exp == null) {
                     throw ParseException.generateException(mLookhead, "未知的符号 \"" + mLookhead.getToken().toString() + "\"");
                 }

@@ -1,5 +1,7 @@
 package compiler.tiny.inter;
 
+import compiler.tiny.parser.Env;
+
 import java.io.PrintStream;
 
 /**
@@ -20,5 +22,10 @@ public class Assign extends Stmt {
         printSpace(depth, out);
         out.printf("assign to:%s\n", mLeft.mVariable.getLexeme());
         mExpr.dumpTree(depth + 2, out);
+    }
+
+    @Override
+    public void gen(Env env, PrintStream out) {
+        out.printf("%s = %s;\n", mLeft.mVariable.getLexeme(), mExpr.gen(env, out).toString());
     }
 }

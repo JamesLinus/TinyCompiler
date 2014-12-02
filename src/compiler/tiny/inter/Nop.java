@@ -1,5 +1,7 @@
 package compiler.tiny.inter;
 
+import compiler.tiny.parser.Env;
+
 import java.io.PrintStream;
 
 /**
@@ -15,6 +17,11 @@ public class Nop extends Stmt {
 
     @Override
     public void dumpTree(int depth, PrintStream out) {
+
+    }
+
+    @Override
+    public void gen(Env env, PrintStream out) {
 
     }
 }

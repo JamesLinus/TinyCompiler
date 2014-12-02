@@ -1,6 +1,7 @@
 package compiler.tiny.inter;
 
 import compiler.tiny.lexer.Operator;
+import compiler.tiny.parser.Env;
 
 import java.io.PrintStream;
 
@@ -22,5 +23,15 @@ public class Unary extends Operation {
         printSpace(depth, out);
         out.printf("op:%s\n", mOperator.getOperator());
         mLeft.dumpTree(depth + 2, out);
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s %s", mOperator.getCOperator(), mLeft.toString());
+    }
+
+    @Override
+    protected Expr gen(Env env, PrintStream out) {
+        return new Unary(mOperator, mLeft.reduce(env, out));
     }
 }

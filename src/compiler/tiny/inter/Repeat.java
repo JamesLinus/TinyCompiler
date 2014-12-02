@@ -1,5 +1,7 @@
 package compiler.tiny.inter;
 
+import compiler.tiny.parser.Env;
+
 import java.io.PrintStream;
 
 /**
@@ -24,5 +26,13 @@ public class Repeat extends Stmt {
         printSpace(depth, out);
         out.println("until");
         mLogical.dumpTree(nextDepth, out);
+    }
+
+    @Override
+    public void gen(Env env, PrintStream out) {
+        out.println("do {");
+        mStmt.gen(env, out);
+        Expr l = mLogical.gen(env, out);
+        out.printf("} while(!(%s));\n", l.toString());
     }
 }

@@ -1,25 +1,23 @@
 package compiler.tiny.inter;
 
-import compiler.tiny.lexer.Int;
 import compiler.tiny.parser.Env;
 
 import java.io.PrintStream;
 
 /**
- * Created by Noisyfox on 2014/12/1.
- * 常量
+ * Created by Noisyfox on 2014/12/2.
+ * 临时变量符号
  */
-public class Constant extends Expr {
-    private final Int mInt;
+public class Temp extends Expr {
+    private final int mIndex;
 
-    public Constant(Int token) {
-        mInt = token;
+    public Temp(int index) {
+        mIndex = index;
     }
 
     @Override
     public void dumpTree(int depth, PrintStream out) {
-        printSpace(depth, out);
-        out.printf("const:%d\n", mInt.getValue());
+
     }
 
     @Override
@@ -34,6 +32,6 @@ public class Constant extends Expr {
 
     @Override
     public String toString() {
-        return String.valueOf(mInt.getValue());
+        return "tmp_" + mIndex;
     }
 }

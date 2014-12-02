@@ -1,5 +1,7 @@
 package compiler.tiny.inter;
 
+import compiler.tiny.parser.Env;
+
 import java.io.PrintStream;
 
 /**
@@ -26,5 +28,13 @@ public class If extends Stmt {
         mThenStmt.dumpTree(nextDepth, out);
         printSpace(depth, out);
         out.println("end");
+    }
+
+    @Override
+    public void gen(Env env, PrintStream out) {
+        Expr log = mLogical.gen(env, out);
+        out.printf("if(%s){\n", log.toString());
+        mThenStmt.gen(env, out);
+        out.println("}");
     }
 }

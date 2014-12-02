@@ -1,6 +1,7 @@
 package compiler.tiny.inter;
 
 import compiler.tiny.lexer.Operator;
+import compiler.tiny.parser.Env;
 
 import java.io.PrintStream;
 
@@ -25,5 +26,20 @@ public class Logical extends Expr {
         int nextDepth = depth + 2;
         mLeft.dumpTree(nextDepth, out);
         mRight.dumpTree(nextDepth, out);
+    }
+
+    @Override
+    protected Expr reduce(Env env, PrintStream out) {
+        return this;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s %s %s", mLeft.toString(), mOperator.getCOperator(), mRight.toString());
+    }
+
+    @Override
+    protected Expr gen(Env env, PrintStream out) {
+        return new Logical(mOperator, mLeft.reduce(env, out), mRight.reduce(env, out));
     }
 }

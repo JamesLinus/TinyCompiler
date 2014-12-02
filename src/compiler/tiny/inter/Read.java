@@ -1,5 +1,7 @@
 package compiler.tiny.inter;
 
+import compiler.tiny.parser.Env;
+
 import java.io.PrintStream;
 
 /**
@@ -17,5 +19,12 @@ public class Read extends Stmt {
     public void dumpTree(int depth, PrintStream out) {
         printSpace(depth, out);
         out.printf("read:%s\n", mId.mVariable.getLexeme());
+    }
+
+    @Override
+    public void gen(Env env, PrintStream out) {
+        out.print("scanf(\"%d\", &");
+        out.print(mId.mVariable.getLexeme());
+        out.println(");");
     }
 }
