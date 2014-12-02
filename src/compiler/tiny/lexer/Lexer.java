@@ -208,6 +208,9 @@ public class Lexer {
                     if (c == -1) {
                         break;
                     }
+                    if (c == '\r') { // 排除 \r
+                        continue;
+                    }
                     sb.append((char) c);
                     if (c == '\n') {
                         break;
