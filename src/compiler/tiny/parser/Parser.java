@@ -9,20 +9,22 @@ import compiler.tiny.lexer.*;
 public class Parser {
 
     private final Lexer mLexer;
-    TokenContainer mLookhead = new TokenContainer();
+    private TokenContainer mLookhead = new TokenContainer();
+    private Env mEnv;
 
     public Parser(Lexer lexer) {
         mLexer = lexer;
     }
 
     public Program parse() throws LexerException, ParseException {
+        mEnv = new Env();
         Seq seq;
         if (mLexer.nextToken(mLookhead)) {
             seq = seq();
         } else {
             seq = new Seq(Nop.NOP, Nop.NOP);
         }
-        return new Program(seq);
+        return new Program(mEnv, seq);
     }
 
     /**
@@ -147,7 +149,8 @@ public class Parser {
         Stmt stmt;
         switch (mLookhead.getToken().getTag()) {
             case Token.TAG_VARIABLE:
-                stmt = new Read(new Id((Word) mLookhead.getToken()));
+                Id id = mEnv.put((Word) mLookhead.getToken(), new Id((Word) mLookhead.getToken()));
+                stmt = new Read(id);
                 if (!match(Token.TAG_VARIABLE)) {
                     // this should never happen
                     throw ParseException.generateException(mLookhead, "致命错误");
@@ -179,7 +182,8 @@ public class Parser {
     }
 
     private Stmt assign_stmt() throws ParseException, LexerException {
-        Id left = new Id((Word) mLookhead.getToken());
+        Word currentWord = (Word) mLookhead.getToken();
+
         if (!match(Token.TAG_VARIABLE)) {
             // this should never happen
             throw ParseException.generateException(mLookhead, "致命错误");
@@ -190,6 +194,8 @@ public class Parser {
         }
 
         Expr expr = expr();
+
+        Id left = mEnv.put(currentWord, new Id(currentWord)); // id 符号表的加入要在右侧表达式计算完成后才能加入
 
         return new Assign(left, expr);
     }
@@ -334,7 +340,10 @@ public class Parser {
                 }
                 break;
             case Token.TAG_VARIABLE:
-                exp = new Id((Word) mLookhead.getToken());
+                exp = mEnv.get((Word) mLookhead.getToken());
+                if (exp == null) {
+                    throw ParseException.generateException(mLookhead, "未知的符号 \"" + mLookhead.getToken().toString() + "\"");
+                }
                 if (!match(Token.TAG_VARIABLE)) {
                     // this should never happen
                     throw ParseException.generateException(mLookhead, "致命错误");

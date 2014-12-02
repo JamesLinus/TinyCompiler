@@ -1,5 +1,7 @@
 package compiler.tiny.inter;
 
+import compiler.tiny.parser.Env;
+
 import java.io.PrintStream;
 
 /**
@@ -7,9 +9,11 @@ import java.io.PrintStream;
  * 语法树顶点
  */
 public class Program extends Node {
+    private final Env mEnv;
     private final Seq mSeq;
 
-    public Program(Seq seq) {
+    public Program(Env env, Seq seq) {
+        mEnv = env;
         mSeq = seq;
     }
 
