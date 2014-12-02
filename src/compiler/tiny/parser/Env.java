@@ -54,6 +54,10 @@ public class Env {
 
     @Override
     public String toString() {
+        if (mSymbols.isEmpty() && mTemps.isEmpty()) {
+            return "";
+        }
+
         StringBuilder sb = new StringBuilder();
         sb.append("int ");
         boolean first = true;
