@@ -16,16 +16,16 @@ import java.io.InputStream;
 public class Main {
     private static final String testInput =
             "{  Sample Program in TINY\n" +
-                    "   －computes factorial            }\n" +
+                    "   -computes factorial    }\n" +
                     "read x;   {input an integer}\n" +
-                    "if 0<x then {don’t do if x<=0 }\n" +
+                    "if 0<x then {don't do if x<=0 }\n" +
                     "  fact := 1;\n" +
                     "  repeat\n" +
                     "    fact := fact * x ;\n" +
                     "    x := x-1\n" +
                     "  until x=0;\n" +
                     "  write fact { output factorial of x }\n" +
-                    "end\n";
+                    "end";
 
     public static void main(String args[]) {
         InputStream in = new ByteArrayInputStream(testInput.getBytes());
@@ -33,6 +33,7 @@ public class Main {
         TokenContainer container = new TokenContainer();
         Lexer lexer = new Lexer(in);
         Parser parser = new Parser(lexer);
+        lexer.setDebugTokenOutput(System.out);
 
         /*
         try {
@@ -46,7 +47,9 @@ public class Main {
         */
         try {
             Program program = parser.parse();
+            System.out.println();
             program.dumpTree(0, System.out);
+            System.out.println();
             program.gen(System.out);
         } catch (LexerException e) {
             e.printStackTrace();

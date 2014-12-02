@@ -2,6 +2,7 @@ package compiler.tiny.lexer;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintStream;
 
 /**
  * Created by Noisyfox on 2014/11/30.
@@ -13,11 +14,17 @@ public class Lexer {
     private boolean mEndOfInput = false;
     private char mPeek = 0;
     private int mRow = 0;
-    private int mLine = 1;
+    private int mLine = 0;
     private int mPutBack = -1; // 回放字符
 
     public Lexer(InputStream input) {
         mInput = input;
+    }
+
+    private PrintStream mDebugOut = null;
+
+    public void setDebugTokenOutput(PrintStream out) {
+        mDebugOut = out;
     }
 
     /**
@@ -27,6 +34,28 @@ public class Lexer {
      * @return
      */
     public boolean nextToken(TokenContainer container) throws LexerException {
+        boolean neof = nextTokenProxied(container);
+
+        // Debug output
+        if (mDebugOut != null) {
+            if (neof) {
+                mDebugOut.print("  ");
+                mDebugOut.println(container.toString());
+            } else {
+                mDebugOut.print("  ");
+                mDebugOut.println(container.getLine() + ":EOF");
+            }
+        }
+        return neof;
+    }
+
+    /**
+     * 获取下一个词元
+     *
+     * @param container
+     * @return
+     */
+    private boolean nextTokenProxied(TokenContainer container) throws LexerException {
         // 1.剔除空格和注释
         boolean isComment = false;
         spaceLoop:
@@ -42,10 +71,7 @@ public class Lexer {
             switch (mPeek) {
                 case ' ':
                 case '\t':
-                    break;
                 case '\n':
-                    mLine++;
-                    mRow = 0;
                     break;
                 case '{':
                     if (isComment) {
@@ -157,6 +183,8 @@ public class Lexer {
         return true;
     }
 
+    private char mLineBuffer[] = null;
+
     /**
      * 从输入串中读取下一个字符
      */
@@ -169,19 +197,47 @@ public class Lexer {
             return;
         }
 
-        try {
-            int c = mInput.read();
-            if (c == -1) {
+        // 检查行缓冲
+        if (mLineBuffer == null || mRow >= mLineBuffer.length) {// 一行结束
+            mLineBuffer = null;
+            // 读入下一行
+            StringBuilder sb = new StringBuilder();
+            try {
+                while (true) {
+                    int c = mInput.read();
+                    if (c == -1) {
+                        break;
+                    }
+                    sb.append((char) c);
+                    if (c == '\n') {
+                        break;
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            if (sb.length() == 0) { // eof
                 mEndOfInput = true;
                 return;
             }
-            mRow++;
-            mPeek = (char) c;
-            mEndOfInput = false;
-        } catch (IOException e) {
-            e.printStackTrace();
-            mEndOfInput = true;
+            mLine++;
+            mRow = 0;
+            String line = sb.toString();
+            mLineBuffer = line.toCharArray();
+
+            // Debug output
+            if (mDebugOut != null) {
+                if (line.endsWith("\n")) {
+                    mDebugOut.printf("%d:%s", mLine, line);
+                } else {
+                    mDebugOut.printf("%d:%s\n", mLine, line);
+                }
+            }
         }
+
+        mPeek = mLineBuffer[mRow];
+        mRow++;
+        mEndOfInput = false;
     }
 
     private boolean checkNext(char c) {
