@@ -14,7 +14,8 @@ public abstract class Operation extends Expr {
         Expr expr = gen(env, out);
         env.tmpPush();
         Temp temp = env.obtainTmp();
-        out.printf("%s = %s;\n", temp.toString(), expr.toString());
+        out.printf("%s = %s;", temp.toString(), expr.toString());
+        out.println();
         env.tmpPop();
         return temp;
     }

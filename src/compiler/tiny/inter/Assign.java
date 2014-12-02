@@ -20,12 +20,14 @@ public class Assign extends Stmt {
     @Override
     public void dumpTree(int depth, PrintStream out) {
         printSpace(depth, out);
-        out.printf("assign to:%s\n", mLeft.mVariable.getLexeme());
+        out.printf("assign to:%s", mLeft.mVariable.getLexeme());
+        out.println();
         mExpr.dumpTree(depth + 2, out);
     }
 
     @Override
     public void gen(Env env, PrintStream out) {
-        out.printf("%s = %s;\n", mLeft.mVariable.getLexeme(), mExpr.gen(env, out).toString());
+        out.printf("%s = %s;", mLeft.mVariable.getLexeme(), mExpr.gen(env, out).toString());
+        out.println();
     }
 }

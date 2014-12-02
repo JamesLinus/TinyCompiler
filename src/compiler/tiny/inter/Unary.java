@@ -21,7 +21,8 @@ public class Unary extends Operation {
     @Override
     public void dumpTree(int depth, PrintStream out) {
         printSpace(depth, out);
-        out.printf("op:%s\n", mOperator.getOperator());
+        out.printf("op:%s", mOperator.getOperator());
+        out.println();
         mLeft.dumpTree(depth + 2, out);
     }
 

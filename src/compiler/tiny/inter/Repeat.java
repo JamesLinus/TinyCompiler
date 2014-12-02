@@ -33,6 +33,7 @@ public class Repeat extends Stmt {
         out.println("do {");
         mStmt.gen(env, out);
         Expr l = mLogical.gen(env, out);
-        out.printf("} while(!(%s));\n", l.toString());
+        out.printf("} while(!(%s));", l.toString());
+        out.println();
     }
 }

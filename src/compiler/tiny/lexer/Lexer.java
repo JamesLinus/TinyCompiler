@@ -231,10 +231,10 @@ public class Lexer {
             // Debug output
             if (mDebugOut != null) {
                 if (line.endsWith("\n")) {
-                    mDebugOut.printf("%d:%s", mLine, line);
-                } else {
-                    mDebugOut.printf("%d:%s\n", mLine, line);
+                    line = line.substring(0, line.length() - 1);
                 }
+                mDebugOut.printf("%d:%s", mLine, line);
+                mDebugOut.println();
             }
         }
 

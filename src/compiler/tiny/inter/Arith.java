@@ -22,7 +22,8 @@ public class Arith extends Operation {
     @Override
     public void dumpTree(int depth, PrintStream out) {
         printSpace(depth, out);
-        out.printf("op:%s\n", mOperator.getOperator());
+        out.printf("op:%s", mOperator.getOperator());
+        out.println();
         int nextDepth = depth + 2;
         mLeft.dumpTree(nextDepth, out);
         mRight.dumpTree(nextDepth, out);

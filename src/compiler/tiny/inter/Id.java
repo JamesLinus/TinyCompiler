@@ -19,7 +19,8 @@ public class Id extends Expr {
     @Override
     public void dumpTree(int depth, PrintStream out) {
         printSpace(depth, out);
-        out.printf("id:%s\n", mVariable.getLexeme());
+        out.printf("id:%s", mVariable.getLexeme());
+        out.println();
     }
 
     @Override

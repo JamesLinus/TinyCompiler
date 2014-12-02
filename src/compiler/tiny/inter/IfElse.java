@@ -37,7 +37,8 @@ public class IfElse extends Stmt {
     @Override
     public void gen(Env env, PrintStream out) {
         Expr log = mLogical.gen(env, out);
-        out.printf("if(%s){\n", log.toString());
+        out.printf("if(%s){", log.toString());
+        out.println();
         mThenStmt.gen(env, out);
         out.println("} else {");
         mElseStmt.gen(env, out);

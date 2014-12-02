@@ -19,7 +19,8 @@ public class Constant extends Expr {
     @Override
     public void dumpTree(int depth, PrintStream out) {
         printSpace(depth, out);
-        out.printf("const:%d\n", mInt.getValue());
+        out.printf("const:%d", mInt.getValue());
+        out.println();
     }
 
     @Override

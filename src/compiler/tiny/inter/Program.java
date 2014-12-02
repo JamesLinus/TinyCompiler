@@ -30,7 +30,6 @@ public class Program extends Node {
         out.println();
         out.println("int main(){");
         // 然后产生语句
-        StringBuffer sb = new StringBuffer();
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream(1024);
         PrintStream o = new PrintStream(byteArrayOutputStream);
         // 先生成中间代码到内存缓冲，用来预先确定要用到的临时变量

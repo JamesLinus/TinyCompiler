@@ -18,7 +18,8 @@ public class Read extends Stmt {
     @Override
     public void dumpTree(int depth, PrintStream out) {
         printSpace(depth, out);
-        out.printf("read:%s\n", mId.mVariable.getLexeme());
+        out.printf("read:%s", mId.mVariable.getLexeme());
+        out.println();
     }
 
     @Override
